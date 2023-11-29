@@ -174,14 +174,3 @@ app.listen(3300,()=>{
     console.log('Server berjalan pada port 3300')
 })
 
-
-// CREATE TYPE user_role AS ENUM ('User', 'Admin');
-
-// CREATE TABLE account (
-//     id SERIAL PRIMARY KEY,
-//     nama VARCHAR(255) NOT NULL,
-//     role user_role NOT NULL,
-//     password VARCHAR(255) NOT NULL,
-//     tanggal_lahir DATE,
-//     file_upload BYTEA -- Kolom baru untuk pengumpulan file
-// );
