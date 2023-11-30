@@ -6,7 +6,7 @@ The Apply Job Management System is a web application developed for educational p
 
 ## Team Members
 - Mohammad Varrel Bramasta - 2106733811
-- Reichan Adhiguno - 
+- Reichan Adhiguno - 2106703273
   
 ## Key Features
 
@@ -50,7 +50,7 @@ Follow the steps below to get the project up and running:
 
 1. **Clone the Repository:**
    ```bash
-   git clone [repository_url]
+   git clone https://github.com/varrel123/Apply-Job
 2. **Run the index.js:**
    ```bash
    npm start
