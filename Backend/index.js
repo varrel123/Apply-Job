@@ -1,10 +1,20 @@
 const express = require('express');
 const app = express();
 const { Client } = require('pg');
+const cors = require('cors');
 const bp = require('body-parser');
 const multer = require('multer');
+const path = require('path');
 const session = require('express-session');
 require('dotenv').config();
+const fs = require('fs');
+
+
+const corsOptions = {
+  origin: 'http://localhost:3300', // Sesuaikan dengan origin yang sesuai
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 
 const db = new Client({
     user: 'mohammadvarrel23',
@@ -15,6 +25,7 @@ const db = new Client({
     sslmode: 'require',
     ssl: true
 });
+
 
 db.connect((err) => {
     if (err) {
@@ -31,100 +42,76 @@ app.use(session({
   }));
 
 const storage = multer.memoryStorage();
-
-// function pdfFilter(req, file, cb) {
-//   const allowedTypes = ['application/pdf'];
-
-//   if (!allowedTypes.includes(file.mimetype)) {
-//     const error = new Error('Only PDF files are allowed!');
-//     error.code = 'LIMIT_FILE_TYPES';
-//     return cb(error, false);
-//   }
-//   cb(null, true);
-// }
-
 const upload = multer({ storage: storage });
 
-// const upload = multer({
-//   storage: storage,
-//   fileFilter: pdfFilter
-//   limits: {
-//     fileSize: 1024 * 1024 * 5, // 5 MB (dalam byte)
-//   },
-// });
-
+app.use(cors(corsOptions));
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../Frontend')));
 
+app.post('/login', async (req, res) => {
+  const { nama, password } = req.body;
 
-
-app.post('/login', async (req, res) => { //Login khusus user
-    const { nama, password } = req.body;
-  
-    if (!nama || !password) {
+  if (!nama || !password) {
       return res.status(400).send('Invalid request');
-    }
-  
-    const query = 'SELECT id, nama, role, password FROM account WHERE nama = $1;';
-    db.query(query, [nama], (err, results) => {
-      if (err) {
-        return res.status(500).send('Internal Server Error');
+  }
+
+  try {
+      const query = 'SELECT id, nama, role, password FROM account WHERE nama = $1;';
+      const { rows: results } = await db.query(query, [nama]);
+
+      if (results.length < 1) {
+          return res.status(401).send('Nama salah');
       }
-  
-      if (results.rowCount < 1) {
-        return res.status(401).send('Nama salah'); 
-      }
-  
-      const storedPassword = results.rows[0].password;
-      const userRole = results.rows[0].role;
-  
+
+      const storedPassword = results[0].password;
+      const userRole = results[0].role;
+
       if (password === storedPassword) {
-        if (userRole === 'User') {
-          return res.status(200).json({
-            message: 'Login successful (User)',
-            user_id: results.rows[0].id,
-          });
-        } else if (userRole === 'Admin') {
-          return res.status(401).send('Hanya user yang dapat login');
-        }
+          if (userRole === 'Admin' || userRole === 'User') {
+              return res.status(200).json({
+                  message: `Login successful (${userRole})`,
+                  user_id: results[0].id,
+                  user_role: userRole,
+              });
+          } else {
+              return res.status(401).send('Hanya user dan admin yang dapat login');
+          }
       }
       return res.status(401).send('Password salah');
-    });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).send('Internal Server Error');
+  }
 });
 
-
-app.get('/check_all_account', (req, res) => {
-    if (req.session && req.session.role === 'Admin') {
-      const query = 'SELECT * FROM account;';
-      db.query(query, (err, allAccountsResults) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send('Internal Server Error');
-        }
-  
-        return res.send({ all_accounts: allAccountsResults.rows });
-      });
-    } else {
-      return res.status(403).send('Hanya admin yang dapat mengakses');
-    }
-});
-  
 app.post('/apply_job', upload.single('file_upload'), async (req, res) => {
   try {
     const { nama, tanggal_lahir } = req.body;
-    const fileUpload = req.file ? req.file.buffer : null;
+    const fileUpload = req.file ? req.file : null;
 
-    if (!nama || !tanggal_lahir || !fileUpload) {
-      return res.status(400).json({ error: 'Nama, tanggal_lahir, dan file_upload harus diisi' });
+    if (!nama || !tanggal_lahir) {
+      return res.status(400).json({ error: 'Nama and tanggal_lahir must be provided' });
     }
 
-    const query = 'INSERT INTO account (nama, role, password, tanggal_lahir, file_upload) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-    const values = [nama, 'User', 'random_password', tanggal_lahir, fileUpload];
+    let fileData = null;
+
+    if (fileUpload) {
+      // Read the file content as a byte array
+      fileData = fileUpload.buffer;
+    }
+
+    const query = 'UPDATE account SET tanggal_lahir = $1, file_upload = $2 WHERE nama = $3 RETURNING *';
+    const values = [tanggal_lahir, fileData, nama];
 
     const result = await db.query(query, values);
-    const insertedData = result.rows[0];
 
-    res.status(201).json({ message: 'Apply job successful', data: insertedData });
+    if (result.rows.length > 0) {
+      const updatedData = result.rows[0];
+      return res.status(200).json({ message: 'Update account successful', data: updatedData });
+    } else {
+      return res.status(404).json({ error: 'User not found' });
+    }
   } catch (error) {
     console.error(error);
 
@@ -165,15 +152,15 @@ app.post('/apply_job', upload.single('file_upload'), async (req, res) => {
 //   }
 // });
 
-// app.get('/', (req, res) => {
-//   res.sendFile(__dirname + './server.html');
-// });
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Frontend', 'login.html'));
+});
 
 app.listen(3300,()=>{
   console.log('Server berjalan pada port 3300')
 })
 
 
-
+//http://localhost:3300/login.html
 
 
