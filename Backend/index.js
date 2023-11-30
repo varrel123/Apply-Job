@@ -16,7 +16,6 @@ const db = new Client({
     ssl: true
 });
 
-
 db.connect((err) => {
     if (err) {
         console.log(err);
@@ -32,7 +31,6 @@ app.use(session({
   }));
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 // function pdfFilter(req, file, cb) {
 //   const allowedTypes = ['application/pdf'];
@@ -45,10 +43,11 @@ const upload = multer({ storage: storage });
 //   cb(null, true);
 // }
 
-// const upload = multer({ storage: storage, fileFilter: pdfFilter });
+const upload = multer({ storage: storage });
 
 // const upload = multer({
 //   storage: storage,
+//   fileFilter: pdfFilter
 //   limits: {
 //     fileSize: 1024 * 1024 * 5, // 5 MB (dalam byte)
 //   },
@@ -59,9 +58,7 @@ app.use(bp.urlencoded({ extended: true }));
 
 
 
-/////////////////////////
-
-app.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => { //Login khusus user
     const { nama, password } = req.body;
   
     if (!nama || !password) {
@@ -75,7 +72,7 @@ app.post('/login', async (req, res) => {
       }
   
       if (results.rowCount < 1) {
-        return res.status(401).send('Nama salah'); // Nama tidak ditemukan
+        return res.status(401).send('Nama salah'); 
       }
   
       const storedPassword = results.rows[0].password;
@@ -88,7 +85,7 @@ app.post('/login', async (req, res) => {
             user_id: results.rows[0].id,
           });
         } else if (userRole === 'Admin') {
-          return res.status(401).send('Hanya akun dengan role User yang bisa login');
+          return res.status(401).send('Hanya user yang dapat login');
         }
       }
       return res.status(401).send('Password salah');
@@ -108,7 +105,7 @@ app.get('/check_all_account', (req, res) => {
         return res.send({ all_accounts: allAccountsResults.rows });
       });
     } else {
-      return res.status(403).send('Hanya pengguna dengan role "Admin" yang dapat mengakses');
+      return res.status(403).send('Hanya admin yang dapat mengakses');
     }
 });
   
@@ -168,9 +165,15 @@ app.post('/apply_job', upload.single('file_upload'), async (req, res) => {
 //   }
 // });
 
-///////////////////////
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + './server.html');
+});
 
 app.listen(3300,()=>{
-    console.log('Server berjalan pada port 3300')
+  console.log('Server berjalan pada port 3300')
 })
+
+
+
+
 
