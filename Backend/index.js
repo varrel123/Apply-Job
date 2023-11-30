@@ -165,9 +165,9 @@ app.post('/apply_job', upload.single('file_upload'), async (req, res) => {
 //   }
 // });
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + './server.html');
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + './server.html');
+// });
 
 app.listen(3300,()=>{
   console.log('Server berjalan pada port 3300')
