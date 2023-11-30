@@ -1,0 +1,132 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url(https://www.spellerinternational.com.au/rails/active_storage/representations/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBOVJWR2c9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--3470091c9b2f911a0bbcfa1694f154019d7ec5da/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCam9VWTI5dFltbHVaVjl2Y0hScGIyNXpld2c2QzNKbGMybDZaVWtpRHpJd01EQjRNVEF3TUY0R09nWkZWRG9NWjNKaGRtbDBlVWtpQzBObGJuUmxjZ1k3QjFRNkNXTnliM0JKSWhJeU1EQXdlREV3TURBck1Dc3dCanNIVkE9PSIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--ae9c14c80fbb841b8667347f542e4bd907a0e287/image-2022-11-24T04-20-23.026Z.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+
+    margin: 60px 0;
+    
+
+    height: 100%;
+}
+
+.header-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    padding: 5px 10px;
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgb(31, 114, 131) 100%);
+    display: flex; 
+    align-items: center;
+
+}
+
+
+
+.logo-container{
+    width: 230px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo{
+    height: 100%;
+}
+
+.logo-label{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-style: italic;
+    color: white;
+}
+
+nav{
+    flex: 1;
+    margin-left: 70px;
+    
+}
+
+nav a{
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    margin-right: 50px;
+}
+
+.logout-container{
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logout{
+    height: 60%;
+    filter: brightness(0) invert(1);
+    margin-right: 20px;
+}
+
+nav a:hover,
+.logout:hover{
+    cursor: pointer;
+}
+.content-container{
+    height: 100%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+    width: 42vw;    
+}
+
+.description{
+    height: 21vw; 
+    color: white;   
+}
+
+h1{
+    font-size: 4vw;
+}
+
+p{
+    font-size: 1.3vw;
+    font-weight: bold;
+}
+
+.apply-job{
+    background-color: rgb(255, 255, 255); 
+    padding: 20px 50px;
+    width: 25vw;
+    border-radius: 20px;
+    font-size: 0.8vw;  
+}
+
+.apply-job label{
+    font-size: 1.05vw;
+}
+
+.user-input{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    row-gap: 1vw;
+}
+
+input{
+    padding: 5px;
+}
+
+.submit-button{
+    color: aliceblue;
+    border-radius: 25px;
+    border-style: none;
+    background-color: rgb(33, 122, 224);
+    height: 2.5vw;
+    font-size: 1.05vw;
+}
