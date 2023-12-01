@@ -47,14 +47,16 @@ The Apply Job Management System is a web application developed for educational p
 ## Getting Started
 
 Follow the steps below to get the project up and running:
-
-1. **Clone the Repository:**
+1. **install NPM in the terminal in the Backend directory (Optional) :**
+   ```bash
+   npm install express pg cors body-parser multer path express-session dotenv
+2. **Clone the Repository:**
    ```bash
    git clone https://github.com/varrel123/Apply-Job
-2. **Run the index.js:**
+3. **Run the index.js:**
    ```bash
    npm start
-3. **Open in Browser:**
+4. **Open in Browser:**
    ```bash
    Visit http://localhost:3300/login.html in your web browser.
 
