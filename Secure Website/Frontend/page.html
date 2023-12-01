@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kemjar</title>
+    <link rel="stylesheet" href="page.css">
+</head>
+
+<body>
+    <div class="header-container">
+        <div class="logo-container">
+            <img class="logo" src="b13-high-resolution-logo-removebg-preview.png">
+            <label class="logo-label">Privilege Escalation<br>Insecure File Upload</label>
+        </div>
+       
+       <nav>
+            <a>Home</a>
+            <a>Profile</a>
+            <a href="admin.html"></a>
+        </nav>
+        <a class="logout-container" href="http://localhost:3300/logout">
+            <img class="logout" src="https://www.svgrepo.com/show/135250/logout.svg">
+        </a>
+    </div>
+    <div class="content-container">
+        <div class="description">
+            <h1>  Ini Page Admin</h1>
+            <p>Disini terjadinya insecure file upload</p>
+        </div>
+        
+        <div class="apply-job">
+            <h2>Apply Job</h2>
+            <div class="user-input">
+                <label>Full Name</label>
+                <input id="nama" type="text">
+                <label>Date of Birth</label>
+                <input id="tanggal_lahir" type="date">
+                <label>CV</label>
+                <input id="file_upload" type="file">
+                <button class="submit-button" id="submit-button" >Submit</button> 
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="page.js"></script>
+</body>
+</html>
