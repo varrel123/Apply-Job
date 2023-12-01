@@ -11,7 +11,7 @@ const fs = require('fs');
 
 
 const corsOptions = {
-  origin: 'http://localhost:3300', // Sesuaikan dengan origin yang sesuai
+  origin: 'http://localhost:3300',
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -43,6 +43,20 @@ app.use(session({
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+// const upload = multer({
+//   storage: multer.memoryStorage(),
+//   limits: {
+//     fileSize: 5 * 1024 * 1024, // Batas ukuran file dalam byte (contoh: 5 MB)
+//   },
+//   fileFilter: (req, file, cb) => {
+//     if (file.mimetype === 'application/pdf') {
+//       cb(null, true);
+//     } else {
+//       cb(new Error('File harus berformat PDF'));
+//     }
+//   },
+// });
 
 app.use(cors(corsOptions));
 app.use(bp.json());
@@ -97,7 +111,6 @@ app.post('/apply_job', upload.single('file_upload'), async (req, res) => {
     let fileData = null;
 
     if (fileUpload) {
-      // Read the file content as a byte array
       fileData = fileUpload.buffer;
     }
 
@@ -126,24 +139,32 @@ app.post('/apply_job', upload.single('file_upload'), async (req, res) => {
 // app.post('/apply_job', upload.single('file_upload'), async (req, res) => {
 //   try {
 //     const { nama, tanggal_lahir } = req.body;
-//     const fileUpload = req.file ? req.file.buffer : null;
+//     const fileUpload = req.file ? req.file : null;
 
-//     if (!nama || !tanggal_lahir || !fileUpload) {
-//       return res.status(400).json({ error: 'Nama, tanggal_lahir, dan file_upload harus diisi' });
+//     if (!nama || !tanggal_lahir) {
+//       return res.status(400).json({ error: 'Nama and tanggal_lahir must be provided' });
 //     }
 
-//     // Simpan data ke database
-//     const query = 'INSERT INTO account (nama, role, password, tanggal_lahir, file_upload) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-//     const values = [nama, 'User', 'random_password', tanggal_lahir, fileUpload];
+//     let fileData = null;
+
+//     if (fileUpload) {
+//       fileData = fileUpload.buffer;
+//     }
+
+//     const query = 'UPDATE account SET tanggal_lahir = $1, file_upload = $2 WHERE nama = $3 RETURNING *';
+//     const values = [tanggal_lahir, fileData, nama];
 
 //     const result = await db.query(query, values);
-//     const insertedData = result.rows[0];
 
-//     res.status(201).json({ message: 'Apply job successful', data: insertedData });
+//     if (result.rows.length > 0) {
+//       const updatedData = result.rows[0];
+//       return res.status(200).json({ message: 'Update account successful', data: updatedData });
+//     } else {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
 //   } catch (error) {
 //     console.error(error);
 
-//     // Tambahkan penanganan kesalahan yang lebih spesifik
 //     if (error.code === '23505') {
 //       return res.status(400).json({ error: 'Nama sudah digunakan, pilih nama yang lain' });
 //     } else {

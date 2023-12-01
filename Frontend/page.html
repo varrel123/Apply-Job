@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Kemjar</title>
     <link rel="stylesheet" href="page.css">
@@ -11,11 +12,10 @@
             <img class="logo" src="b13-high-resolution-logo-removebg-preview.png">
             <label class="logo-label">Privilege Escalation<br>Insecure File Upload</label>
         </div>
-       
-       <nav>
+
+        <nav>
             <a>Home</a>
             <a>Profile</a>
-            <a href="admin.html"></a>
         </nav>
         <a class="logout-container" href="login.html">
             <img class="logout" src="https://www.svgrepo.com/show/135250/logout.svg">
@@ -23,10 +23,10 @@
     </div>
     <div class="content-container">
         <div class="description">
-            <h1>JobQuest</h1>
-            <p>Welcome to JobQuest, your gateway to a world of career opportunities! At JobQuest, we understand that finding the perfect job is a journey, and we're here to make that journey seamless and rewarding. Our user-friendly website is designed to connect talented individuals with their dream jobs, providing a comprehensive platform that simplifies the job search process.</p>
+            <h1>  INI PAGE USER</h1>
+            <p>Welcome User</p>
         </div>
-        
+
         <div class="apply-job">
             <h2>Apply Job</h2>
             <div class="user-input">
@@ -36,7 +36,7 @@
                 <input id="tanggal_lahir" type="date">
                 <label>CV</label>
                 <input id="file_upload" type="file">
-                <button class="submit-button" id="submit-button" >Submit</button> 
+                <button class="submit-button" id="submit-button">Submit</button>
             </div>
         </div>
     </div>
@@ -44,6 +44,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const submitButton = document.getElementById('submit-button');
+        const adminLink = document.getElementById('admin-link');
 
         submitButton.addEventListener('click', async () => {
             const nama = document.getElementById('nama').value;
@@ -62,6 +63,11 @@
                 if (response.status === 200 && response.data.message === 'Update account successful') {
                     // Handle success, e.g., show a success message or redirect
                     window.alert('Update account successful!');
+
+                    // Check if the user role is 'Admin' and display the Admin link
+                    if (response.data.user_role === 'Admin') {
+                        adminLink.style.display = 'inline-block';
+                    }
                     // Alternatively, you can redirect the user to another page
                     // window.location.href = '/success.html';
                 } else {
@@ -74,4 +80,5 @@
         });
     </script>
 </body>
+
 </html>
