@@ -42,10 +42,10 @@ app.use(session({
   }));
 
 const storage = multer.memoryStorage();
-const acceptedFileTypes = ['application/pdf'];
-const maxFileSize = 5 * 1024 * 1024; // 5 MB
+const acceptedFileTypes = ['application/pdf']; //Membuat type file harus PDF
+const maxFileSize = 5 * 1024 * 1024; // 5 MB (Membuat file max berukuran 5MB)
 
-const upload = multer({
+const upload = multer({ //setup type dan ukuran file
   storage: multer.memoryStorage(),
   fileFilter: (req, file, cb) => {
     if (!acceptedFileTypes.includes(file.mimetype)) {
@@ -62,9 +62,9 @@ const upload = multer({
 app.use(cors(corsOptions));
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public'))); //Membuat directori folder public untuk akses public
 
-function ensureAdmin(req, res, next) {
+function ensureAdmin(req, res, next) { //session untuk menjadikan admin dapat mengakses beberapa file(page)
   if (req.session.userRole === 'Admin') {
       next(); 
   } else {
@@ -72,7 +72,7 @@ function ensureAdmin(req, res, next) {
   }
 }
 
-function ensureAuthenticated(req, res, next) {
+function ensureAuthenticated(req, res, next) {//session untuk menjadikan user dapat mengakses beberapa file(page)
   if (req.session.userRole) {
     next();
   } else {
@@ -80,11 +80,11 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-app.get('/page.html', ensureAuthenticated, (req, res) => {
+app.get('/page.html', ensureAuthenticated, (req, res) => { //page.html dapat diakses ketika login sebagai user
   res.sendFile(path.join(__dirname, '../Frontend', 'page.html'));
 });
 
-app.get('/page2.html', ensureAdmin, (req, res) => {
+app.get('/page2.html', ensureAdmin, (req, res) => { //page2.html dapat diakses ketika login sebagai admin
   res.sendFile(path.join(__dirname, '../Frontend', 'page2.html'));
 });
 
@@ -112,7 +112,7 @@ app.post('/login', async (req, res) => {
 
       if (password === storedPassword) {
         if (userRole === 'Admin' || userRole === 'User') {
-            req.session.userRole = userRole; 
+            req.session.userRole = userRole; //mengecek session rolenya
             return res.status(200).json({
                 message: `Login successful (${userRole})`,
                 user_id: results[0].id,
@@ -170,7 +170,7 @@ app.get('/home', (req, res) => {
   res.sendFile(path.join(__dirname, '../Frontend', 'login.html'));
 });
 
-app.get('/logout', (req, res) => {
+app.get('/logout', (req, res) => { //jika login terus logout maka session berakhir
   req.session.destroy((err) => {
     if(err) {
       return console.log(err);
